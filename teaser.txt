@@ -1,0 +1,1 @@
+How many objects are either small cylinders or red things?
