@@ -1,3 +1,5 @@
 *.zip
 *.json
 *.png
+clevr.egg-info
+__pycache__
