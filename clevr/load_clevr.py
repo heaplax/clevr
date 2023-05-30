@@ -19,10 +19,10 @@ import pickle
 # ques_file_path = "F:/work//Multimodal-GPT/ques_file.json"
 # output_path = "F:/work//Multimodal-GPT/output.json"
 
-def get_clevr_random_question(path_info, nums=100):
+def get_clevr_random_question(path_info, split='train', nums=100):
     # clevr_path = "F:/work/CLEVR/CLEVR_v1.0/"
     clevr_path = path_info["clevr_path"]
-    question_path = os.path.join(clevr_path, "questions", "CLEVR_train_questions.json")
+    question_path = os.path.join(clevr_path, "questions", f"CLEVR_{split}_questions.json")
     with open(question_path, "r") as f:
         question_list = json.load(f)["questions"]
     random.shuffle(question_list)
@@ -30,6 +30,7 @@ def get_clevr_random_question(path_info, nums=100):
     for question in question_list:
         res_list.append({
             "split": question["split"],
+            "image_filename": question["image_filename"],
             "image_id": question["image_index"],
             "image_path": os.path.join(clevr_path, "images", question["split"], question["image_filename"]),
             "question": question["question"],
