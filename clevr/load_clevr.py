@@ -85,22 +85,25 @@ def get_OFA_question(path_info, tsv_path, nums=100):
             tsv_w.writerow(cur_row)
 
 
-def get_clevr_question(path_info):
+def get_clevr_question(path_info, split='train', nums=100):
     # clevr_path = "F:/work/CLEVR/CLEVR_v1.0/"
     clevr_path = path_info["clevr_path"]
-    question_path = os.path.join(clevr_path, "questions", "CLEVR_val_questions.json")
+    question_path = os.path.join(clevr_path, "questions", f"CLEVR_{split}_questions.json")
     with open(question_path, "r") as f:
         question_list = json.load(f)["questions"]
     res_list = []
     for question in question_list:
         res_list.append({
             "split": question["split"],
+            "image_filename": question["image_filename"],
             "image_id": question["image_index"],
             "image_path": os.path.join(clevr_path, "images", question["split"], question["image_filename"]),
             "question": question["question"],
             "answer": question["answer"],
         })
-    return res_list[0:100]
+        if len(res_list) == nums:
+            break
+    return res_list
 
 
 def generate_result_file(path_info):
@@ -195,9 +198,9 @@ def eval_output(path_info):
     print("Overall Accuracy is: %.02f\n" % overall_acc)
 
 
-def generate_output(path_info, response_list):
+def generate_output(path_info, question_list, response_list):
     output_path = path_info["output_path"]
-    output_list = get_clevr_question(path_info)
+    output_list = question_list
     for i, response in enumerate(response_list):
         output_list[i]["response"] = response
     with open(output_path, "w") as f:
